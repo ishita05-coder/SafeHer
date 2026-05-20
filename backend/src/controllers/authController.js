@@ -1,5 +1,7 @@
 const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
+const EmergencyContact = require('../models/EmergencyContact');
+const SOSAlert = require('../models/SOSAlert');
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
@@ -101,8 +103,31 @@ const getUserProfile = async (req, res) => {
   }
 };
 
+// @desc    Delete user account
+// @route   DELETE /api/auth/me
+// @access  Private
+const deleteUser = async (req, res) => {
+  try {
+    // Delete associated data
+    await EmergencyContact.deleteMany({ user: req.user._id });
+    await SOSAlert.deleteMany({ user: req.user._id });
+
+    // Delete user
+    const user = await User.findByIdAndDelete(req.user._id);
+
+    if (user) {
+      res.json({ success: true, message: 'User deleted successfully' });
+    } else {
+      res.status(404).json({ success: false, error: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   getUserProfile,
+  deleteUser
 };

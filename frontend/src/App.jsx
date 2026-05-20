@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import FakeCall from './pages/FakeCall';
+import Contacts from './pages/Contacts';
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/fake-call" element={<FakeCall />} />
+        <Route path="/contacts" element={<Contacts />} />
       </Routes>
     </Router>
   );

@@ -25,6 +25,18 @@ const Dashboard = () => {
     navigate('/');
   };
 
+  const handleDeleteAccount = async () => {
+    if (window.confirm("Are you sure you want to permanently delete your account and all associated data? This action cannot be undone.")) {
+      try {
+        await api.delete('/auth/me');
+        logout();
+        navigate('/');
+      } catch (error) {
+        alert("Failed to delete account: " + (error.response?.data?.error || error.message));
+      }
+    }
+  };
+
   const handleSOS = async (triggerMethod = 'button') => {
     if (!location) {
       alert('Location not available yet. Please wait or check permissions.');
@@ -55,6 +67,12 @@ const Dashboard = () => {
         </h1>
         <div className="flex items-center gap-4">
           <span className="text-slate-300">Hello, {user?.name}</span>
+          <button 
+            onClick={handleDeleteAccount}
+            className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-sm font-medium transition-colors border border-red-700 shadow-lg shadow-red-500/20"
+          >
+            Delete Account
+          </button>
           <button 
             onClick={handleLogout}
             className="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm font-medium transition-colors border border-slate-700"
@@ -121,7 +139,9 @@ const Dashboard = () => {
         <div className="glass p-6 rounded-2xl hover:scale-105 transition-transform cursor-pointer">
           <h2 className="text-xl font-semibold mb-2">Emergency Contacts</h2>
           <p className="text-slate-400 text-sm">Manage who gets notified in an emergency.</p>
-          <button className="mt-4 text-pink-400 text-sm font-medium hover:text-pink-300">
+          <button 
+            onClick={() => navigate('/contacts')}
+            className="mt-4 text-pink-400 text-sm font-medium hover:text-pink-300">
             View Contacts →
           </button>
         </div>

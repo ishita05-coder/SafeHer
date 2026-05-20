@@ -14,6 +14,7 @@ const app = express();
 
 const authRoutes = require('./routes/authRoutes');
 const sosRoutes = require('./routes/sosRoutes');
+const contactRoutes = require('./routes/contactRoutes');
 
 // Middleware
 app.use(helmet());
@@ -23,6 +24,7 @@ app.use(express.json());
 // Mount Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/sos', sosRoutes);
+app.use('/api/contacts', contactRoutes);
 
 // Basic Route
 app.get('/', (req, res) => {

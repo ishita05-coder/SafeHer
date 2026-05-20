@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const FakeCall = () => {
@@ -7,6 +7,19 @@ const FakeCall = () => {
   const [callerName, setCallerName] = useState('Dad');
   const [timer, setTimer] = useState(0);
   const navigate = useNavigate();
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    audioRef.current = new Audio('/fake_call_audio.mp3');
+    audioRef.current.loop = true;
+    
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+    };
+  }, []);
 
   const startFakeCall = () => {
     setIsRinging(true);
@@ -15,12 +28,19 @@ const FakeCall = () => {
   const acceptCall = () => {
     setIsRinging(false);
     setIsActive(true);
+    if (audioRef.current) {
+      audioRef.current.play().catch(err => console.error('Audio error:', err));
+    }
   };
 
   const declineCall = () => {
     setIsRinging(false);
     setIsActive(false);
     setTimer(0);
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
     navigate('/dashboard');
   };
 
